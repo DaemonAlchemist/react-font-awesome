@@ -16,7 +16,7 @@ const icons = {solid, regular, brands};
 console.log(icons);
 export default new Proxy({}, {
     get: (t, icon, r) => {
-        return ({solid, regular, brands}) => {
+        return ({solid, regular, brands, spin, fw, ...params}) => {
             //Check and set style
             if (solid && regular || solid && brands || regular && brands) {
                 throw "Font Awesome icons can only have one style"
@@ -29,8 +29,13 @@ export default new Proxy({}, {
                 throw "Could not find Font Awesome icon " + style + "." + iconName
             }
 
+            //Setup additional params
+            params.classes = [];
+            if(spin) {params.classes.push('fa-spin');}
+            if(fw) {params.classes.push('fa-fw');}
+
             //Generate and return the icon
-            const __html = fa.icon(icons[style]["fa" + icon]).html[0];
+            const __html = fa.icon(icons[style]["fa" + icon], params).html[0];
             return <span dangerouslySetInnerHTML={{__html}} />;
         }
     }
