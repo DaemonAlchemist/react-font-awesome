@@ -1,42 +1,74 @@
 
 import React from 'react';
-import fa from '@fortawesome/fontawesome';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import regular from '@fortawesome/fontawesome-free-regular';
 import brands from '@fortawesome/fontawesome-free-brands';
 
-let config = {
+const iconsRaw = {solid, regular, brands};
+
+let _config = {
     defaultStyle: "solid"
-}
-export const faConfig = (name, value) => {
-    config[name] = value;
 };
 
-const icons = {solid, regular, brands};
-console.log(icons);
-export default new Proxy({}, {
-    get: (t, icon, r) => {
-        return ({solid, regular, brands, spin, fw, ...params}) => {
-            //Check and set style
-            if (solid && regular || solid && brands || regular && brands) {
-                throw "Font Awesome icons can only have one style"
-            }
-            const style = solid ? "solid" : regular ? "regular" : brands ? "brands" : config.defaultStyle;
+export const config = (name, value) => {
+    _config[name] = value;
+}
 
-            //Get the icon name and make sure it exists
-            const iconName = "fa" + icon;
-            if(typeof icons[style][iconName] === 'undefined') {
-                throw "Could not find Font Awesome icon " + style + "." + iconName
-            }
+let Icon = {};
+let Mask = {};
+['solid', 'regular', 'brands'].forEach(style => {
+    Object.keys(iconsRaw[style]).forEach(icon => {
+        const data = iconsRaw[style][icon];
+        const mask = [data.prefix, data.iconName];
+        const iconName = icon.substr(2);
 
-            //Setup additional params
-            params.classes = [];
-            if(spin) {params.classes.push('fa-spin');}
-            if(fw) {params.classes.push('fa-fw');}
+        const component = ({
+            inverse, stack,
+            ...props
+        }) => {
+            props.icon=data;
+
+            let classes = [];
+            const option = (flag, name) => {
+                if(flag) classes.push(name);
+            }
+            option(inverse, 'fa-inverse');
 
             //Generate and return the icon
-            const __html = fa.icon(icons[style]["fa" + icon], params).html[0];
-            return <span dangerouslySetInnerHTML={{__html}} />;
+            return stack
+                ? <Layer {...props.stack}>
+                    <FontAwesomeIcon {...props} className={classes.join(' ')} transform="shrink-2 left-4 up-4" style={{opacity: 0.2}}/>
+                    <FontAwesomeIcon {...props} className={classes.join(' ')} transform="shrink-2" style={{opacity: 0.5}} />
+                    <FontAwesomeIcon {...props} className={classes.join(' ')} transform="shrink-2 right-4 down-4" />
+                  </Layer>
+                : <FontAwesomeIcon {...props} className={classes.join(' ')} />
+        };
+
+        if(typeof Icon[iconName] === 'undefined') {
+            Icon[iconName] = component;
+            Mask[iconName] = mask;
         }
-    }
+        Icon[iconName][style] = component;
+        Mask[iconName][style] = mask;
+    });
 });
+
+let Layer = ({children, className, size, ...props}) =>
+    <span className={size ? `fa-${size}` : ""}>
+        <span className={(className || "") + " fa-layers fa-fw"} {...props}>
+            {children}
+        </span>
+    </span>;
+
+Layer.Text = ({children, className, transform, ...props}) =>
+    <span className={(className || "") + " fa-layers-text"} {...props} data-fa-transform={transform || ""} >
+        {children}
+    </span>;
+
+Layer.Counter = ({children, className, ...props}) =>
+    <span className={(className || "") + " fa-layers-counter"} {...props}>
+        {children}
+    </span>;
+
+export {Layer, Icon, Mask};
