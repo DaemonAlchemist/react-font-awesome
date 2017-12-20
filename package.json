@@ -1,5 +1,5 @@
 {
-  "name": "react-font-awesome",
+  "name": "react-font-awesome-5",
   "version": "0.0.1",
   "description": "A React component library for Font Awesome 5",
   "main": "lib/index.js",
@@ -40,6 +40,10 @@
     "mocha": "^4.0.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.0",
+    "@fortawesome/fontawesome-free-brands": "^5.0.2",
+    "@fortawesome/fontawesome-free-regular": "^5.0.2",
+    "@fortawesome/fontawesome-free-solid": "^5.0.2",
     "react": "^16.2.0"
   }
 }
