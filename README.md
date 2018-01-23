@@ -1,12 +1,12 @@
-#React Components for Font Awesome 5
+# React Components for Font Awesome 5
 
-##Overview
+## Overview
 
 This package provides some simple sugar around the @fortawesome/react-fontawesome package.
 
-##Basic Icons
+## Basic Icons
 
-```
+```js
 import {Icon, Mask, config} from "react-font-awesome-5";
 
 config('defaultStyle', 'solid'); //Optional, default is 'solid'
@@ -19,9 +19,9 @@ config('defaultStyle', 'solid'); //Optional, default is 'solid'
 
 ```
 
-##Layers
+## Layers
 
-```
+```js
 import {Icon, Layer} from "react-font-awesome-5";
 ...
 <Layer size="2x">
@@ -30,8 +30,8 @@ import {Icon, Layer} from "react-font-awesome-5";
 </Layer>
 ```
 
-##Stacks
-```
+## Stacks
+```js
 import {Icon} from "react-font-awesome-5";
 ...
 <Icon.File stack />
