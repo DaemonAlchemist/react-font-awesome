@@ -1,6 +1,6 @@
 {
   "name": "react-font-awesome-5",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A React component library for Font Awesome 5",
   "main": "lib/index.js",
   "scripts": {
